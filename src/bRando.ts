@@ -1,5 +1,5 @@
 /**
- * An interface for options used when initializing a background changer. It is passed to the {@link create} function or a {@link bRando} class constructor.
+ * An interface for options used when initializing a background changer. It is passed to the {@link BRando} component or a {@link bRando} class constructor.
  */
 export interface Options {
 	/**
@@ -38,7 +38,7 @@ export interface Options {
 }
 
 /**
- * A class for automatically changing CSS backgrounds on any element in a random or sequential order &mdash; a background changer. A usage example can be found in [the readme](https://github.com/isaacyakl/brandojs#-usage).
+ * A class for automatically changing CSS backgrounds on any element in a random or sequential order &mdash; a background changer. A usage example can be found in [the readme](https://github.com/yak-was-here/brandojs#-usage).
  * @remarks
  * A background will never repeat (back-to-back) unless only one {@link Options.backgrounds background value} is given.
  */
@@ -102,7 +102,7 @@ export class bRando {
 		} else {
 			this._timeout = 7500;
 		}
-		if (this._changer !== -1) {
+		if (this._changer !== null) {
 			this.pause();
 			this.play();
 		}
@@ -143,7 +143,7 @@ export class bRando {
 	protected readonly _originalCSSBackgrounds: string[] = [];
 	protected readonly _originalCSSPositions: string[] = [];
 	protected readonly _originalCSSZIndexes: string[] = [];
-	protected _changer: number = -1;
+	protected _changer: number | null = null;
 	protected readonly _styleElement: HTMLElement;
 	protected _isAfterOpaque: boolean = false;
 	protected readonly _CSSBackgroundVarName: string;
@@ -175,7 +175,7 @@ export class bRando {
 	];
 
 	/**
-	 * Constructs a background changer and accepts an {@link Options} object. A usage example can be found in [the readme](https://github.com/isaacyakl/brandojs#-usage).
+	 * Constructs a background changer and accepts an {@link Options} object. A usage example can be found in [the readme](https://github.com/yak-was-here/brandojs#-usage).
 	 *
 	 * @remarks
 	 * [[include:first-background.md]]
@@ -208,6 +208,7 @@ export class bRando {
 			(e as HTMLElement).style.zIndex = "0";
 		});
 
+		this.next();
 		this.play();
 	}
 
@@ -236,8 +237,8 @@ export class bRando {
 	 * ```
 	 */
 	pause(): void {
-		window.clearInterval(this._changer);
-		this._changer = -1;
+		if (this._changer !== null) window.clearInterval(this._changer);
+		this._changer = null;
 	}
 	/**
 	 * Advances a background changer to the next background in the sequence or at random, depending on the value of {@link bRando.random}.
@@ -258,7 +259,7 @@ export class bRando {
 			return newIndex;
 		};
 		// if a changer exists reset it
-		if (this._changer !== -1) {
+		if (this._changer !== null) {
 			this.play();
 		}
 		if (this.backgrounds.length > 1) {
@@ -310,7 +311,7 @@ export class bRando {
 	 * @returns `true` if running
 	 */
 	isRunning(): boolean {
-		return this._changer !== -1 ? true : false;
+		return this._changer !== null;
 	}
 	/**
 	 * Returns whether a background changer has been removed.

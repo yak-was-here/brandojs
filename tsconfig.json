@@ -1,19 +1,23 @@
 {
 	"compilerOptions": {
-		"strict": true,
-		"outDir": "./dist",
-		"types": ["node", "jest"],
-		"sourceMap": true,
-		"noImplicitAny": true,
-		"target": "ES6",
-		"jsx": "react",
-		"forceConsistentCasingInFileNames": true,
-		"allowJs": true,
-		"allowSyntheticDefaultImports": true,
+		"target": "ES2020",
+		"useDefineForClassFields": true,
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
-		"moduleResolution": "node",
-		"lib": ["DOM", "DOM.Iterable"],
-		"declaration": true
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"declaration": true,
+		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src/**/*"]
+	"include": ["src"],
+	"exclude": ["src/readme/**"]
 }

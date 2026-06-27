@@ -5,6 +5,10 @@ body {
 	box-sizing: border-box;
 }
 
+#root {
+	width: 100%;
+}
+
 body {
 	background-color: rgb(160, 14, 155);
 	color: rgb(255, 255, 255);
