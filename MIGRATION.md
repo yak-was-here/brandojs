@@ -47,42 +47,41 @@ The underlying `bRando` class is still exported as an escape hatch for advanced 
 
 **Before:** Vanilla HTML page, processed Webpack template syntax, used `bRando.create()` global.
 
-**After:** Full Vite + React app in `demo/`:
-- `demo/index.html` — root HTML with `<div id="root">`
-- `demo/main.tsx` — React entry (`createRoot`)
-- `demo/App.tsx` — demo UI using `BRando` with ref controls + rendered markdown
-- `vite.demo.config.ts` — updated to include `@vitejs/plugin-react`
+**After:** Full Vite + React app in `src/demo/`:
+- `src/demo/index.html` — root HTML with `<div id="root">`
+- `src/demo/main.tsx` — React entry (`createRoot`)
+- `src/demo/App.tsx` — demo UI using `BRando` with ref controls + rendered markdown
+- `src/demo/public/` — static assets (background images, screencap) served verbatim
+- `vite.demo.config.ts` — `root: src/demo/`, `@vitejs/plugin-react`, custom `serveDir` middleware
 
 The demo now directly shows `BRando` in use as a full-page background with interactive ref controls.
 
 ---
 
-## Phase 5 — README source content
+## Phase 5 — README
 
-**Updated files in `src/readme/`:**
-- `installation-usage.md` — replaced vanilla JS `bRando.create()` examples with React `<BRando />` quick-start
-- `todo.md` — removed "Create React component" from Planned (done); added new ideas
-- `badges.md` — removed stale `dist/bRando.js` file-size badge (file no longer exists)
-- `blueprint.json` — updated bullets to show `✔️ React (BRando component)`
-- `readme.md.test.ts` — migrated from Jest to Vitest (`// @vitest-environment node`)
+`@appnest/readme` (blueprint-based generation) was removed entirely. `README.md` is now hand-authored. The `src/readme/` directory is gone.
+
+- Coverage badge served from `https://brandojs.isaacyakl.com/coverage/coverage.svg` (generated fresh each build, not committed)
+- Libraries.io badge removed (showed stale data from old npm release)
+- Compatibility updated to React-only (`✔️ React 17, 18, 19+`)
 
 ---
 
 ## Phase 6 — Build pipeline
 
-**New/updated scripts (matching original intent):**
+**Scripts:**
 
 | Script | Description |
 |---|---|
-| `build` | Full build: tests → badge → readme → lib → demo → docs |
+| `build` | Full build: tests → badge → lib → demo → docs |
 | `build:lib` | `vite build` + `tsc` declarations |
 | `build:demo` | Vite demo app → `public/` |
-| `build-readme` | `` @appnest/readme `` generate + vitest readme validation |
-| `build-coverage-badge` | `coverage-badger` from `public/coverage/clover.xml` |
+| `build-coverage-badge` | `coverage-badger` from clover XML → `public/coverage/coverage.svg` |
 | `test` | `vitest run` |
 | `test:watch` | `vitest` (watch mode) |
 | `test:coverage` | `vitest run --coverage` (outputs to `public/coverage/`) |
-| `dev` | Vite dev server for demo on port 4000 |
+| `dev` | `concurrently`: Vite dev server (port 4000) + `typedoc --watch` |
 | `preview` | Serve built `public/` on port 4000 |
 | `docs` | `typedoc` |
 | `docs:watch` | `typedoc --watch` |
@@ -91,21 +90,20 @@ The demo now directly shows `BRando` in use as a full-page background with inter
 | `postpublish` | `git push && git push --tags` |
 
 **New devDependencies:**
-- `@appnest/readme` — README generation from blueprint
 - `coverage-badger` — SVG badge from clover XML
-- `concurrently` — parallel watch processes
-- `@types/node` — Node.js types for `fs` in readme test
+- `concurrently` — parallel watch processes (`dev` runs Vite + TypeDoc simultaneously)
+- `@types/node` — Node.js types (pinned to `24.x` to match `.nvmrc`)
 
-**Vitest coverage config update:**
-- Added `"clover"` reporter (required by `coverage-badger`)
-- Output directory changed to `public/coverage/` (served by Vercel, matches old Jest config)
+**Vitest coverage config:**
+- Reporters: `text`, `lcov`, `clover` (clover required by `coverage-badger`)
+- Output: `public/coverage/` (served by Vercel at `/coverage/`)
 
 ---
 
 ## Phase 7 — Vercel
 
-- `vercel.json` — `buildCommand: npm run build`, `outputDirectory: public`, `framework: null`
-- `package.json` `engines` field — `node: ">=24"`
+- `vercel.json` — `buildCommand: npm run build`, `outputDirectory: public`, `framework: null`, `trailingSlash: true`
+- `package.json` `engines` field — `node: "24.x"` (pinned major; `>=24` caused Vercel auto-upgrade warning)
 
 ---
 
@@ -147,9 +145,9 @@ The demo now directly shows `BRando` in use as a full-page background with inter
 | `src/BRando.test.tsx` | 15 React component tests |
 | `src/test-setup.ts` | Registers `@testing-library/jest-dom` matchers |
 | `src/docs/index.ts` | Single TypeDoc entry (replaces browser.ts + react.ts) |
-| `demo/index.html` | React app root HTML |
-| `demo/main.tsx` | React entry point |
-| `demo/App.tsx` | Demo UI component |
+| `src/demo/index.html` | React app root HTML |
+| `src/demo/main.tsx` | React entry point |
+| `src/demo/App.tsx` | Demo UI component |
 
 ### Files removed
 
@@ -182,5 +180,4 @@ The demo now directly shows `BRando` in use as a full-page background with inter
 ## Known limitations
 
 - `getComputedStyle(el, "::after")` is not implemented in jsdom, so tests verify CSS custom properties via `element.style.cssText` instead. Browser behaviour is unchanged.
-- The `src/readme/` blueprint-based README generator uses Handlebars-style `{{}}` syntax processed by `@appnest/readme`. Running `npm run build-readme` overwrites `README.md`; on Vercel this is ephemeral (the file is not committed back to git).
 - `gaID` was dropped from typedoc-plugin-extras v4 — Google Analytics tracking in TypeDoc docs is no longer active.
