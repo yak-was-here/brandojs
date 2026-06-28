@@ -2,8 +2,8 @@
 node_modules
 
 # Build outputs (rebuilt fresh on every deploy)
-dist
-public
+/dist
+/public
 
 # npm pack artifact
 *.tgz
