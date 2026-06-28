@@ -35,12 +35,17 @@ brandojs/
 │   ├── BRando.test.tsx     # Tests for the React component
 │   ├── readme.test.ts      # Sanity checks for README.md
 │   ├── test-setup.ts       # Vitest setup (jest-dom matchers)
-│   ├── docs/               # TypeDoc entry points
-│   └── readme/             # README content fragments (used by demo)
-├── demo/
-│   ├── index.html          # Demo app root HTML
-│   ├── main.tsx            # React entry point
-│   └── App.tsx             # Demo UI (uses BRando with ref controls)
+│   ├── vite-env.d.ts       # Vite module type declarations (*.css, ?raw, etc.)
+│   ├── docs/               # TypeDoc entry point + assets (favicon, doc snippets)
+│   └── demo/               # Demo app source
+│       ├── index.html      # Demo app root HTML
+│       ├── main.tsx        # React entry point
+│       ├── App.tsx         # Demo UI (uses BRando with ref controls)
+│       ├── intro.md        # Intro section rendered in the demo
+│       ├── installation-usage.md  # Quick-start section rendered in the demo
+│       ├── style.css       # Demo styles
+│       └── public/         # Static assets (served verbatim by Vite)
+│           └── img/        # Background photos
 ├── dist/                   # Built library output (git-ignored)
 ├── public/                 # Built demo + docs + coverage (git-ignored)
 ├── vite.config.ts          # Library build + Vitest config
@@ -61,7 +66,7 @@ brandojs/
 npm run dev
 ```
 
-Opens the demo app at `http://localhost:4000`. Changes to `src/` and `demo/` hot-reload instantly.
+Opens the demo app at `http://localhost:4000`. Changes to `src/` hot-reload instantly.
 
 > **Viewing docs in dev:** `npm run dev` also starts `typedoc --watch`, so `public/docs/` is built immediately and rebuilt on any source change. The docs are available at `http://localhost:4000/docs/` as soon as TypeDoc finishes its first pass (a few seconds after startup).
 
@@ -104,7 +109,7 @@ npm run build
 This runs in sequence:
 
 1. `test:coverage` — all tests must pass and coverage is written to `public/coverage/`
-2. `build-coverage-badge` — generates `src/readme/coverage.svg` from the clover XML report
+2. `build-coverage-badge` — generates `public/coverage/coverage.svg` from the clover XML report
 3. `build:lib` — compiles the library to `dist/` (ESM + CJS + type declarations)
 4. `build:demo` — builds the demo React app to `public/`
 5. `docs` — generates TypeDoc API docs to `public/docs/`
@@ -169,9 +174,9 @@ Manages background cycling on a DOM element using CSS custom properties and `::a
 
 Wraps `bRando` inside a `forwardRef` component. Each instance gets a unique `data-brando` attribute as its CSS selector so multiple `<BRando>` components coexist independently. Prop changes are forwarded to the underlying `bRando` instance via individual `useEffect` hooks. The imperative handle (`BRandoHandle`) is exposed via `ref`.
 
-### Demo app — `demo/`
+### Demo app — `src/demo/`
 
-A Vite + React app that showcases the `BRando` component as a full-page background with interactive ref controls. Markdown content from `src/readme/` is imported with `?raw` and rendered at runtime via `marked`.
+A Vite + React app that showcases the `BRando` component as a full-page background with interactive ref controls. Markdown files (`intro.md`, `installation-usage.md`) are imported with `?raw` and rendered at runtime via `marked`. Static assets (photos, screencap) live in `src/demo/public/` and are served verbatim by Vite.
 
 ---
 
