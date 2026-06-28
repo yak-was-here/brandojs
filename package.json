@@ -14,7 +14,7 @@
 		}
 	},
 	"engines": {
-		"node": ">=24"
+		"node": "24.x"
 	},
 	"files": [
 		"dist"

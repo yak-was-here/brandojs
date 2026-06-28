@@ -16,5 +16,6 @@
 	"includeVersion": true,
 	"searchInComments": true,
 	"titleLink": "https://brandojs.isaacyakl.com",
+	"sourceLinkTemplate": "https://github.com/yak-was-here/brandojs/blob/master/{path}#L{line}",
 	"exclude": ["**/src/readme/**", "**/*.test.*", "**/test-setup.*", "**/node_modules/**"]
 }
