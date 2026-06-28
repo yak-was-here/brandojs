@@ -9,7 +9,7 @@
 <a href="https://www.npmjs.com/package/brandojs"><img alt="npm" src="https://img.shields.io/npm/v/brandojs?style=flat-square"></a>
 <a href="https://github.com/yak-was-here/brandojs/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/brandojs?style=flat-square"></a>
 <a href="https://www.npmjs.com/package/brandojs"><img alt="npm downloads" src="https://img.shields.io/npm/dw/brandojs?style=flat-square"/></a>
-<a href="https://brandojs.isaacyakl.com/coverage/lcov-report/"><img alt="coverage" src="./src/readme/coverage.svg"/></a>
+<a href="https://brandojs.isaacyakl.com/coverage/lcov-report/"><img alt="coverage" src="https://brandojs.isaacyakl.com/coverage/coverage.svg"/></a>
 <a href="https://brandojs.isaacyakl.com"><img alt="Vercel deploy" src="https://img.shields.io/github/deployments/yak-was-here/brandojs/Production?label=site&style=flat-square"/></a>
 </p>
 

@@ -25,17 +25,26 @@ function serveDir(dir: string): Plugin {
 		configureServer(server) {
 			server.middlewares.use((req, res, next) => {
 				const url = (req.url ?? "/").split("?")[0];
-				const candidates = [
-					resolve(dir, url.replace(/^\//, "")),
-					resolve(dir, url.replace(/^\//, ""), "index.html"),
-				];
-				for (const candidate of candidates) {
-					if (existsSync(candidate) && statSync(candidate).isFile()) {
-						res.setHeader("Content-Type", MIME[extname(candidate)] ?? "application/octet-stream");
-						res.end(readFileSync(candidate));
+				const direct = resolve(dir, url.replace(/^\//, ""));
+				const withIndex = resolve(dir, url.replace(/^\//, ""), "index.html");
+
+				if (existsSync(direct) && statSync(direct).isFile()) {
+					res.setHeader("Content-Type", MIME[extname(direct)] ?? "application/octet-stream");
+					res.end(readFileSync(direct));
+					return;
+				}
+
+				if (existsSync(withIndex) && statSync(withIndex).isFile()) {
+					if (!url.endsWith("/")) {
+						res.writeHead(301, { Location: url + "/" });
+						res.end();
 						return;
 					}
+					res.setHeader("Content-Type", "text/html; charset=utf-8");
+					res.end(readFileSync(withIndex));
+					return;
 				}
+
 				next();
 			});
 		},

@@ -24,7 +24,7 @@
 		"build": "npm run test:coverage && npm run build-coverage-badge && npm run build:lib && npm run build:demo && npm run docs",
 		"build:lib": "vite build && tsc -p tsconfig.build.json",
 		"build:demo": "vite build --config vite.demo.config.ts",
-		"build-coverage-badge": "coverage-badger -r ./public/coverage/clover.xml -d ./src/readme/",
+		"build-coverage-badge": "coverage-badger -r ./public/coverage/clover.xml -d ./public/coverage/",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",

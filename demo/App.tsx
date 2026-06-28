@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { marked } from "marked";
 import { BRando, BRandoHandle } from "../src/BRando";
-import introRaw from "../src/readme/intro.md?raw";
-import installationUsageRaw from "../src/readme/installation-usage.md?raw";
+import introRaw from "./intro.md?raw";
+import installationUsageRaw from "./installation-usage.md?raw";
 
 const PKG_VARS: Record<string, string> = {
 	"pkg.name": "brandojs",

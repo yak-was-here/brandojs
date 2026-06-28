@@ -18,6 +18,6 @@
 		"declaration": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src"],
+	"include": ["src", "demo"],
 	"exclude": ["src/readme/**"]
 }
