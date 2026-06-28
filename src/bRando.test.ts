@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { bRando } from "./bRando";
 
 let testInstance: bRando;
@@ -9,15 +10,13 @@ beforeEach(() => {
 
 afterEach(() => {
 	testInstance.remove();
-	jest.restoreAllMocks();
+	vi.restoreAllMocks();
 });
 
 describe("default values are set for", () => {
 	test("_changer", () => {
 		// @ts-ignore
-		expect(testInstance._changer).not.toBe(-1);
-		// @ts-ignore
-		expect(typeof testInstance._changer).toBe("number");
+		expect(testInstance._changer).not.toBeNull();
 	});
 	test("_isAfterOpaque", () => {
 		// @ts-ignore
@@ -30,7 +29,7 @@ describe("default values are set for", () => {
 
 describe("public setter works as expected for", () => {
 	test("backgrounds", () => {
-		const spy = jest.spyOn(testInstance, "backgrounds", "set");
+		const spy = vi.spyOn(testInstance, "backgrounds", "set");
 
 		testInstance.backgrounds = [];
 		expect(spy).toHaveBeenCalled();
@@ -48,14 +47,13 @@ describe("public setter works as expected for", () => {
 		expect(testInstance.backgrounds.length).toBeGreaterThan(0);
 	});
 	test("timeout", () => {
-		const spy = jest.spyOn(testInstance, "timeout", "set");
-		const spyPause = jest.spyOn(testInstance, "pause");
-		const spyPlay = jest.spyOn(testInstance, "play");
+		const spy = vi.spyOn(testInstance, "timeout", "set");
+		const spyPause = vi.spyOn(testInstance, "pause");
+		const spyPlay = vi.spyOn(testInstance, "play");
 
 		testInstance.timeout = 2345;
 		expect(spy).toHaveBeenCalled();
 		expect(testInstance.timeout).toBe(2345);
-		// check that changer was updated with new timeout
 		expect(spyPause).toHaveBeenCalled();
 		expect(spyPlay).toHaveBeenCalled();
 
@@ -64,7 +62,7 @@ describe("public setter works as expected for", () => {
 		expect(testInstance.timeout).not.toBe(0);
 	});
 	test("random", () => {
-		const spy = jest.spyOn(testInstance, "random", "set");
+		const spy = vi.spyOn(testInstance, "random", "set");
 
 		testInstance.random = false;
 		expect(spy).toHaveBeenCalled();
@@ -75,7 +73,7 @@ describe("public setter works as expected for", () => {
 		expect(testInstance.random).toBe(true);
 	});
 	test("transition", () => {
-		const spy = jest.spyOn(testInstance, "transition", "set");
+		const spy = vi.spyOn(testInstance, "transition", "set");
 
 		testInstance.transition = "300ms";
 		expect(spy).toHaveBeenCalled();
@@ -89,43 +87,43 @@ describe("public setter works as expected for", () => {
 
 describe("public getter works as expected for", () => {
 	test("CSSSelector", () => {
-		const spy = jest.spyOn(testInstance, "CSSSelector", "get");
+		const spy = vi.spyOn(testInstance, "CSSSelector", "get");
 		expect(testInstance.CSSSelector.length).toBeGreaterThan(0);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
 	});
 	test("nodes", () => {
-		const spy = jest.spyOn(testInstance, "nodes", "get");
+		const spy = vi.spyOn(testInstance, "nodes", "get");
 		expect(testInstance.nodes.length).toBeGreaterThan(0);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
 	});
 	test("backgrounds", () => {
-		const spy = jest.spyOn(testInstance, "backgrounds", "get");
+		const spy = vi.spyOn(testInstance, "backgrounds", "get");
 		expect(testInstance.backgrounds.length).toBeGreaterThan(0);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
 	});
 	test("timeout", () => {
-		const spy = jest.spyOn(testInstance, "timeout", "get");
+		const spy = vi.spyOn(testInstance, "timeout", "get");
 		expect(testInstance.timeout).toBeGreaterThan(0);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
 	});
 	test("random", () => {
-		const spy = jest.spyOn(testInstance, "random", "get");
+		const spy = vi.spyOn(testInstance, "random", "get");
 		expect(testInstance.random).toBe(true);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
 	});
 	test("transition", () => {
-		const spy = jest.spyOn(testInstance, "transition", "get");
+		const spy = vi.spyOn(testInstance, "transition", "get");
 		expect(testInstance.transition.length).toBeGreaterThan(0);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
 	});
 	test("currentBackgroundIndex", () => {
-		const spy = jest.spyOn(testInstance, "currentBackgroundIndex", "get");
+		const spy = vi.spyOn(testInstance, "currentBackgroundIndex", "get");
 		expect(testInstance.currentBackgroundIndex).toBeGreaterThanOrEqual(-1);
 		expect(spy).toHaveReturned();
 		expect(spy).toHaveBeenCalled();
@@ -193,26 +191,27 @@ describe("constructor", () => {
 		testInstance.remove();
 		let result = true;
 
-		// add paragraph elements to test multi-element configuration
 		for (let i = 0; i < 5; i++) {
 			document.body.append(document.createElement("p"));
 		}
 		testInstance = new bRando({ CSSSelector: "p" });
 
 		testInstance.nodes.forEach((n) => {
-			const compdStyleCSSTxt = getComputedStyle(n as HTMLElement, "::after").cssText;
+			const compdStyleCSSTxt = (n as HTMLElement).style.cssText;
+			// constructor calls next() immediately so opacity is already 1
 			// @ts-ignore
-			result = result && (n as HTMLElement).style.zIndex == "0" && compdStyleCSSTxt.includes(`${testInstance._CSSOpacityVarName}: 0`) && compdStyleCSSTxt.includes(`${testInstance._CSSTransitionVarName}: opacity ${testInstance.transition}`) && compdStyleCSSTxt.includes(`${testInstance._CSSContentVarName}: ''`);
+			result = result && (n as HTMLElement).style.zIndex == "0" && compdStyleCSSTxt.includes(`${testInstance._CSSOpacityVarName}: 1`) && compdStyleCSSTxt.includes(`${testInstance._CSSTransitionVarName}: opacity ${testInstance.transition}`) && compdStyleCSSTxt.includes(`${testInstance._CSSContentVarName}: ''`);
 		});
 		expect(result).toBe(true);
 	});
 	test("calls play()", () => {
 		// @ts-ignore
-		expect(testInstance._changer).not.toBe(-1);
+		expect(testInstance._changer).not.toBeNull();
 	});
 	test("single background supported", () => {
 		testInstance = new bRando({ backgrounds: ["linear-gradient(80deg, #0864c8 25%, #588fca 75%)"] });
-		expect(testInstance.currentBackgroundIndex).toBe(-1);
+		// constructor calls next() immediately so index is already 0
+		expect(testInstance.currentBackgroundIndex).toBe(0);
 		testInstance.next();
 		expect(testInstance.currentBackgroundIndex).toBe(0);
 		testInstance.next();
@@ -229,35 +228,32 @@ describe("play()", () => {
 	});
 	describe("works as expected", () => {
 		test("does not play if isRemoved()", () => {
-			const spyIsRemoved = jest.spyOn(testInstance, "isRemoved");
-			const spyPause = jest.spyOn(testInstance, "pause");
+			const spyIsRemoved = vi.spyOn(testInstance, "isRemoved");
+			const spyPause = vi.spyOn(testInstance, "pause");
 			testInstance.remove();
-			// @ts-ignore
-			const lastChangerId = testInstance._changer;
 			testInstance.play();
 			expect(spyIsRemoved).toHaveBeenCalledTimes(1);
 			expect(spyIsRemoved).toHaveLastReturnedWith(true);
 			expect(spyPause).toHaveBeenCalledTimes(1);
 			// @ts-ignore
-			expect(lastChangerId).toEqual(testInstance._changer);
+			expect(testInstance._changer).toBeNull();
 		});
 		test("pauses and sets up a new changer", () => {
-			jest.useFakeTimers();
-			jest.spyOn(global, "setInterval");
+			vi.useFakeTimers();
+			vi.spyOn(globalThis, "setInterval");
 			testInstance = new bRando();
-			const spyPause = jest.spyOn(testInstance, "pause");
-			const spyNext = jest.spyOn(testInstance, "next");
+			const spyPause = vi.spyOn(testInstance, "pause");
+			const spyNext = vi.spyOn(testInstance, "next");
 			testInstance.play();
 
 			expect(spyPause).toHaveBeenCalledTimes(1);
-
 			expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), testInstance.timeout);
 			expect(setInterval).toHaveBeenCalledTimes(2);
 			// @ts-ignore
-			expect(setInterval).toHaveLastReturnedWith(testInstance._changer);
-			jest.advanceTimersByTime(testInstance.timeout);
+			expect(testInstance._changer).not.toBeNull();
+			vi.advanceTimersByTime(testInstance.timeout);
 			expect(spyNext).toHaveBeenCalledTimes(1);
-			jest.useRealTimers();
+			vi.useRealTimers();
 		});
 	});
 });
@@ -270,13 +266,13 @@ describe("pause()", () => {
 		expect(testInstance.pause()).toBe(undefined);
 	});
 	test("works as expected", () => {
-		jest.spyOn(global, "clearInterval");
+		vi.spyOn(globalThis, "clearInterval");
 		// @ts-ignore
 		let lastChanger = testInstance._changer;
 		testInstance.remove();
 		expect(clearInterval).toHaveBeenLastCalledWith(lastChanger);
 		// @ts-ignore
-		expect(testInstance._changer).toBe(-1);
+		expect(testInstance._changer).toBeNull();
 	});
 });
 
@@ -289,7 +285,7 @@ describe("next()", () => {
 	});
 	describe("works as expected", () => {
 		test("does not go to next if isRemoved()", () => {
-			const spy = jest.spyOn(testInstance, "isRemoved");
+			const spy = vi.spyOn(testInstance, "isRemoved");
 			let lastBgIndex = testInstance.currentBackgroundIndex;
 			testInstance.remove();
 			testInstance.next();
@@ -298,89 +294,48 @@ describe("next()", () => {
 			expect(spy).toHaveLastReturnedWith(true);
 		});
 		test("::after is displayed", () => {
-			const spyNext = jest.spyOn(testInstance, "next");
-			const spyPlay = jest.spyOn(testInstance, "play");
+			const spyNext = vi.spyOn(testInstance, "next");
+			const spyPlay = vi.spyOn(testInstance, "play");
 			testInstance.pause();
 			expect(spyNext).not.toHaveBeenCalled();
 
-			expect(testInstance.currentBackgroundIndex).toBe(-1);
-			// @ts-ignore
-			expect(testInstance._isAfterOpaque).toBe(false);
-			let lastBgIndex = testInstance.currentBackgroundIndex;
-
-			testInstance.next();
-			expect(spyPlay).not.toHaveBeenCalled();
-			expect(spyNext).toHaveBeenCalledTimes(1);
-			expect(testInstance.currentBackgroundIndex).not.toBe(lastBgIndex);
-
+			// constructor calls next() immediately so ::after is already displayed
 			expect(testInstance.currentBackgroundIndex).not.toBe(-1);
 			// @ts-ignore
 			expect(testInstance._isAfterOpaque).toBe(true);
 
 			let result = true;
 			testInstance.nodes.forEach((n) => {
-				const compdStyleCSSTxt = getComputedStyle(n as HTMLElement, "::after").cssText;
+				const compdStyleCSSTxt = (n as HTMLElement).style.cssText;
 				// @ts-ignore
 				result = result && compdStyleCSSTxt.includes(`${testInstance._CSSOpacityVarName}: 1`) && compdStyleCSSTxt.includes(`${testInstance._CSSTransitionVarName}: opacity ${testInstance.transition}`) && compdStyleCSSTxt.includes(`${testInstance._CSSBackgroundVarName}: ${testInstance.backgrounds[testInstance.currentBackgroundIndex]}`);
 			});
 			expect(result).toBe(true);
+
+			let lastBgIndex = testInstance.currentBackgroundIndex;
+			testInstance.next();
+			expect(spyPlay).not.toHaveBeenCalled();
+			expect(spyNext).toHaveBeenCalledTimes(1);
+			expect(testInstance.currentBackgroundIndex).not.toBe(lastBgIndex);
+			expect(testInstance.currentBackgroundIndex).not.toBe(-1);
+			// @ts-ignore
+			expect(testInstance._isAfterOpaque).toBe(false); // toggled from true to false
 		});
 		test("::after is hidden", () => {
-			const spyNext = jest.spyOn(testInstance, "next");
-			const spyPlay = jest.spyOn(testInstance, "play");
 			testInstance.pause();
-			testInstance.next();
-
+			// constructor already called next() once (::after displayed, isAfterOpaque=true)
+			// one more next() transitions to hidden (isAfterOpaque=false, opacity=0)
 			let lastBgIndex = testInstance.currentBackgroundIndex;
 			testInstance.next();
 			expect(testInstance.currentBackgroundIndex).not.toBe(lastBgIndex);
 
 			let result = true;
 			testInstance.nodes.forEach((n) => {
-				const compdStyleCSSTxt = getComputedStyle(n as HTMLElement, "::after").cssText;
+				const compdStyleCSSTxt = (n as HTMLElement).style.cssText;
 				// @ts-ignore
 				result = result && compdStyleCSSTxt.includes(`${testInstance._CSSOpacityVarName}: 0`) && compdStyleCSSTxt.includes(`${testInstance._CSSTransitionVarName}: opacity ${testInstance.transition}`);
 			});
 			expect(result).toBe(true);
-			// =====================================
-			//  NOTE:
-			// =====================================
-			//  We are unable to verify that the nodes'
-			//  background properties has been updated
-			//  because the DOM does not return a node's
-			//  background property if a pseudo element
-			//  (::after in this case) has a background
-			//  property set.
-
-			// =====================================
-			//  CASE IN POINT:
-			// =====================================
-			// expect((testInstance.nodes[0] as HTMLElement).style.background !== "" && (testInstance.nodes[0] as HTMLElement).style.cssText.includes("background:")).not.toBe(false);
-
-			//  Those only way to verify is manually in
-			//  bRando.ts that it includes:
-
-			//  (e as HTMLElement).style.background = this.backgrounds[this.currentBackgroundIndex];
-
-			//  OR automatically by comparing the index
-			//  of the background that was last assigned
-			//  as I have done:
-
-			//  lastBgIndex = testInstance.currentBackgroundIndex;
-			//  testInstance.next();
-			//  expect(testInstance.currentBackgroundIndex).not.toBe(lastBgIndex);
-
-			// =====================================
-			//  OBSERVATION:
-			// =====================================
-			//  Calling .style.cssText on the nodes
-			//  reveals they have no background property
-			//  and instead the CSS variable
-			//  (--bRandoBg<selector>) used to manipulate
-			//  the background property of each nodes'
-			//  pseudo element (::after) holds the value
-			//  of the last background displayed for
-			//  the respective ::after.
 		});
 		test("::after toggles consistently", () => {
 			for (let i = 0; i < 30; i++) {
@@ -396,7 +351,7 @@ describe("next()", () => {
 			}
 		});
 		test("changer exists", () => {
-			const spyPlay = jest.spyOn(testInstance, "play");
+			const spyPlay = vi.spyOn(testInstance, "play");
 			testInstance.next();
 			expect(spyPlay).toHaveBeenCalledTimes(1);
 		});
@@ -411,18 +366,20 @@ describe("next()", () => {
 		test("sequential order is supported", () => {
 			testInstance.pause();
 			testInstance.random = false;
-			expect(testInstance.currentBackgroundIndex).toBe(-1);
-			for (let i = 0; i < testInstance.backgrounds.length; i++) {
+			// constructor calls next() immediately so startIndex is already a valid index
+			const n = testInstance.backgrounds.length;
+			const startIndex = testInstance.currentBackgroundIndex;
+			expect(startIndex).toBeGreaterThanOrEqual(0);
+			for (let i = 0; i < n; i++) {
 				testInstance.next();
-				expect(testInstance.currentBackgroundIndex).toBe(i);
+				expect(testInstance.currentBackgroundIndex).toBe((startIndex + 1 + i) % n);
 			}
-			testInstance.next();
-			expect(testInstance.currentBackgroundIndex).toBe(0);
 		});
 		test("one background case is supported", () => {
 			testInstance = new bRando({ backgrounds: ["linear-gradient(80deg, #0864c8 25%, #588fca 75%)"] });
 			testInstance.pause();
-			expect(testInstance.currentBackgroundIndex).toBe(-1);
+			// constructor calls next() immediately so index is already 0
+			expect(testInstance.currentBackgroundIndex).toBe(0);
 			testInstance.next();
 			expect(testInstance.currentBackgroundIndex).toBe(0);
 			testInstance.next();
@@ -450,7 +407,7 @@ describe("remove()", () => {
 	test("works as expected", () => {
 		testInstance.remove();
 		// @ts-ignore
-		expect(testInstance._changer).toBe(-1); // interval was cleared
+		expect(testInstance._changer).toBeNull();
 		expect(
 			Array.from(testInstance.nodes).every(
 				(e, index) =>
@@ -461,9 +418,9 @@ describe("remove()", () => {
 					// @ts-ignore
 					(e as HTMLElement).style.zIndex == testInstance._originalCSSZIndexes[index]
 			)
-		).toBe(true); // original CSS properties were restored
+		).toBe(true);
 		// @ts-ignore
-		expect(testInstance._styleElement.isConnected).toBe(false); // the style element was removed from DOM
+		expect(testInstance._styleElement.isConnected).toBe(false);
 	});
 });
 

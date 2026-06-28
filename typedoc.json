@@ -1,18 +1,21 @@
 {
 	"$schema": "https://typedoc.org/schema.json",
-	"entryPoints": ["./src/docs/browser.ts"],
+	"plugin": ["typedoc-plugin-extras"],
+	"tsconfig": "./tsconfig.docs.json",
+	"entryPoints": ["./src/docs/index.ts"],
+	"entryPointStrategy": "resolve",
 	"out": "public/docs/",
 	"name": "bRando.js",
 	"readme": "none",
 	"sidebarLinks": {
-		"Readme": "https://github.com/isaacyakl/brandojs",
+		"Readme": "https://github.com/yak-was-here/brandojs",
 		"Demo": "https://brandojs.isaacyakl.com",
 		"Usage": "https://brandojs.isaacyakl.com/#usage",
 		"Coverage": "https://brandojs.isaacyakl.com/coverage/lcov-report/"
 	},
 	"includeVersion": true,
 	"searchInComments": true,
-	"includes": "./src/docs",
 	"titleLink": "https://brandojs.isaacyakl.com",
-	"gaID": "G-ZEEM3GS7SB"
+	"sourceLinkTemplate": "https://github.com/yak-was-here/brandojs/blob/master/{path}#L{line}",
+	"exclude": ["**/src/readme/**", "**/*.test.*", "**/test-setup.*", "**/node_modules/**"]
 }
