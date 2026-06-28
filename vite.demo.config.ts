@@ -53,8 +53,7 @@ function serveDir(dir: string): Plugin {
 
 export default defineConfig({
 	plugins: [react(), serveDir(resolve(__dirname, "public"))],
-	root: resolve(__dirname, "demo"),
-	publicDir: resolve(__dirname, "src/demo"),
+	root: resolve(__dirname, "src/demo"),
 	build: {
 		outDir: resolve(__dirname, "public"),
 		emptyOutDir: false,

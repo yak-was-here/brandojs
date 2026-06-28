@@ -1,5 +1,5 @@
 <p align="center">
-<img src="src/demo/brandojs-demo-cap.webp" alt="bRando.js demo screencap" width="640" height="auto"/>
+<img src="src/demo/public/brandojs-demo-cap.webp" alt="bRando.js demo screencap" width="640" height="auto"/>
 </p>
 
 <h1 align="center">bRando.js</h1>

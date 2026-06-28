@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { marked } from "marked";
-import { BRando, BRandoHandle } from "../src/BRando";
+import { BRando, BRandoHandle } from "../BRando";
 import introRaw from "./intro.md?raw";
 import installationUsageRaw from "./installation-usage.md?raw";
 
