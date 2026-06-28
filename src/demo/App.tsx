@@ -17,11 +17,11 @@ function renderMd(raw: string): string {
 }
 
 const BACKGROUNDS = [
-	`url("./img/alex-knight-vaA6EQiUSo4-unsplash_result.jpg") center/cover no-repeat`,
-	`url("./img/joel-fulgencio-01fAtHwYqo0-unsplash_result.jpg") center/cover no-repeat`,
-	`url("./img/pawel-nolbert-4u2U8EO9OzY-unsplash_result.jpg") center/cover no-repeat`,
-	`url("./img/stephan-valentin-oqYLdbuJDQU-unsplash_result.jpg") center/cover no-repeat`,
-	`url("./img/waranont-joe-T7qyLNPwgKA-unsplash_result.jpg") center/cover no-repeat`,
+	`url("/img/alex-knight-vaA6EQiUSo4-unsplash_result.jpg") center/cover no-repeat`,
+	`url("/img/joel-fulgencio-01fAtHwYqo0-unsplash_result.jpg") center/cover no-repeat`,
+	`url("/img/pawel-nolbert-4u2U8EO9OzY-unsplash_result.jpg") center/cover no-repeat`,
+	`url("/img/stephan-valentin-oqYLdbuJDQU-unsplash_result.jpg") center/cover no-repeat`,
+	`url("/img/waranont-joe-T7qyLNPwgKA-unsplash_result.jpg") center/cover no-repeat`,
 	`linear-gradient(80deg, #0864c8 25%, #588fca 75%)`,
 ];
 

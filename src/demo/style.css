@@ -121,7 +121,7 @@ button.control:hover {
 @media only screen and (min-width: 1280px) {
 	body {
 		display: flex;
-		background: url("./img/waranont-joe-T7qyLNPwgKA-unsplash_result.jpg") center/cover no-repeat;
+		background: url("/img/waranont-joe-T7qyLNPwgKA-unsplash_result.jpg") center/cover no-repeat;
 	}
 	main {
 		display: grid;
